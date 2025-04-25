@@ -1,103 +1,211 @@
-import Image from "next/image";
+'use client';
+
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [likeCooldown, setLikeCooldown] = useState(false);
+  const [commentsLoaded, setCommentsLoaded] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const res = await fetch('/api/likes');
+        const data = await res.json();
+        setLikes(data.likes);
+      } catch (err) {
+        console.error('Failed to load likes:', err);
+      }
+    };
+
+    fetchLikes();
+  }, []);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await fetch('/api/comment');
+        const data = await res.json();
+        setComments(data.comments || []);
+        setCommentsLoaded(true);
+      } catch (err) {
+        console.error('Failed to load comments:', err);
+      }
+    };
+
+    if (showComments && !commentsLoaded) {
+      fetchComments();
+    }
+  }, [showComments, commentsLoaded]);
+
+  const handleLike = async () => {
+    if (likeCooldown) {
+      alert('Please wait before liking again.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/likes', { method: 'POST' });
+      const data = await res.json();
+      setLikes(data.likes);
+      setLikeCooldown(true);
+      setTimeout(() => setLikeCooldown(false), 3000);
+    } catch (error) {
+      console.error('Failed to like:', error);
+    }
+  };
+
+  const handleComment = async (e) => {
+    e.preventDefault();
+    const text = commentInput.trim();
+    if (!text || loading) return;
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setComments((prev) => [...prev, data.newComment]);
+        setCommentInput('');
+        setShowComments(true);
+        if (!commentsLoaded) setCommentsLoaded(true);
+      } else {
+        alert(data.error || 'Failed to post comment');
+      }
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      alert('Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <main className="p-8 font-sans max-w-4xl mx-auto">
+      {/* 🎈 Birthday Dedication Banner */}
+      <div className="bg-pink-100 border-2 border-pink-300 p-4 rounded-xl text-center mb-8">
+        <h1 className="text-3xl text-pink-600 font-bold">
+          🎉 Happy 5th Birthday, Ruth! 🎂
+        </h1>
+        <p className="text-gray-700 mt-2">
+          This website is lovingly dedicated to you — our little sunshine 🌞
+        </p>
+        <p className="text-sm text-gray-500">27 April 2025</p>
+      </div>
+
+      {/* 🎈 Image Gallery */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">📸 Memories</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <Image
+            src="/images/img1.jpg"
+            alt="Birthday Image 1"
+            width={300}
+            height={200}
+            className="rounded-lg"
+          />
+          <Image
+            src="/img2.jpg"
+            alt="Birthday Image 2"
+            width={300}
+            height={200}
+            className="rounded-lg"
+          />
+          <Image
+            src="/img3.jpg"
+            alt="Birthday Image 3"
+            width={300}
+            height={200}
+            className="rounded-lg"
+          />
+          <Image
+            src="/img4.jpg"
+            alt="Birthday Image 4"
+            width={300}
+            height={200}
+            className="rounded-lg"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </section>
+
+      <h1 className="text-2xl font-bold mb-2">🎉 You're Invited!</h1>
+      <p className="mb-4">Click to like this invitation:</p>
+
+      <button
+        onClick={handleLike}
+        disabled={likeCooldown}
+        className={`text-2xl px-4 py-2 rounded-lg border-2 border-red-400 bg-red-100 transition 
+          ${
+            likeCooldown
+              ? 'opacity-50 cursor-not-allowed'
+              : 'hover:bg-red-200 cursor-pointer'
+          }`}
+      >
+        ❤️ {likes} Likes
+      </button>
+
+      <hr className="my-8" />
+
+      <h2 className="text-xl font-semibold mb-4">💬 Comments</h2>
+
+      <button
+        onClick={() => setShowComments((prev) => !prev)}
+        className="mb-4 bg-gray-100 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-200"
+      >
+        {showComments ? 'Hide Comments' : 'View Comments'}
+      </button>
+
+      <form
+        onSubmit={handleComment}
+        className="flex flex-wrap items-center mb-4"
+      >
+        <input
+          type="text"
+          placeholder="Write a comment..."
+          value={commentInput}
+          onChange={(e) => setCommentInput(e.target.value)}
+          onFocus={() => setShowComments(true)}
+          disabled={loading}
+          className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-72 mb-2 sm:mb-0 sm:mr-2"
+        />
+        <button
+          type="submit"
+          disabled={loading || !commentInput.trim()}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          {loading ? 'Sending...' : 'Post'}
+        </button>
+      </form>
+
+      {showComments && (
+        <div>
+          {comments.length === 0 ? (
+            <p className="text-gray-600">
+              No comments yet. Be the first to comment!
+            </p>
+          ) : (
+            <ul className="list-disc pl-5 space-y-2">
+              {comments.map((comment) => (
+                <li key={comment._id} className="text-gray-800">
+                  🗨️ {comment.text}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </main>
   );
 }
