@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+
 # 🎉 Birthday Invitation Web App
 
 A modern, responsive birthday invitation web application built using **Next.js**, **MongoDB**, and **Mongoose**. Designed to display event details and collect heartfelt wishes from guests. Created with joy to celebrate Ruth’s special day! 🥳
