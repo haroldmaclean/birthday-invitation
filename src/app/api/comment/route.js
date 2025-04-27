@@ -1,5 +1,5 @@
 import dbConnect from '@/utils/db';
-import Invitation from '@/models/invitation';
+import Invitation from '@/models/Invitation';
 
 export async function POST(req) {
   try {
