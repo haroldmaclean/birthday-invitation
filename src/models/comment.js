@@ -1,18 +1,19 @@
-const invitationSchema = new mongoose.Schema(
+import mongoose from 'mongoose';
+
+// Comment Schema
+const commentSchema = new mongoose.Schema(
   {
-    likes: {
-      type: Number,
-      default: 0,
+    text: { type: String, required: true },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
-    comments: [
-      {
-        text: String,
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
   },
   { timestamps: true }
 );
+
+// Define and export the Comment Model
+const Comment =
+  mongoose.models.Comment || mongoose.model('Comment', commentSchema);
+
+export default Comment;
