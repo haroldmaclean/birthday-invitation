@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ HEAD
 
 # 🎉 Birthday Invitation Web App
 
