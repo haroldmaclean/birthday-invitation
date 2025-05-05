@@ -28,6 +28,10 @@ Check out the live version of the app here:
 
 - **Mongoose** – ODM for managing MongoDB data in Node.js
 - **Tailwind CSS** – For fast, responsive component styling
+- ## 🔗 Links
+
+- [🌐 Live Site](https://birthday-invitation-sigma.vercel.app)
+- [✏️ Edit This Page on GitHub](https://github.com/haroldmaclean/birthday-invitation/edit/main/src/app/page.js)
 
 ## 🚀 Getting Started
 
