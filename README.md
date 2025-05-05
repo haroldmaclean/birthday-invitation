@@ -18,13 +18,14 @@ Check out the live version of the app here:
 - 🎊 Displays birthday invitation title, date, and location
 - 💬 Visitors can leave comments and well wishes
 - 📱 Fully responsive design for all devices
-- 🗃️ MongoDB-powered data storage
+- 🗃️ MongoDB Atlas-powered data storage 
 - 🧩 Easy to deploy and customize
 
 ## 🛠 Tech Stack
 
 - **Next.js v15.2.4** – Modern React framework with SSR and static export support
-- **MongoDB** – NoSQL database for storing invitation and comments
+- **MongoDB Atlas** – Cloud-based NoSQL database for storing invitations and comments
+
 - **Mongoose** – ODM for managing MongoDB data in Node.js
 - **Tailwind CSS** – For fast, responsive component styling
 
