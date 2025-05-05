@@ -1,7 +1,7 @@
 // app/api/comment/route.js
 import { withCORS } from '@/lib/cors';
 import { connectToMongoose } from '@/lib/mongoose';
-import Comment from '@/models/Comment';
+import comment from '@/models/comment';
 import { NextResponse } from 'next/server';
 
 async function handler(req) {
