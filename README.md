@@ -1,8 +1,15 @@
- HEAD
+cat > README.md << 'EOF'
 
 # 🎉 Birthday Invitation Web App
 
 A modern, responsive birthday invitation web application built using **Next.js**, **MongoDB**, and **Mongoose**. Designed to display event details and collect heartfelt wishes from guests. Created with joy to celebrate Ruth’s special day! 🥳
+
+## 🌐 Live Demo
+
+Check out the live version of the app here:  
+👉 [https://birthday-invitation-sigma.vercel.app](https://birthday-invitation-sigma.vercel.app)
+
+> ⚠️ **Note:** Avoid using old subdirectory links like `/birthday-invitation-jwxg`. Always use the base URL shown above.
 
 ## 🌟 A Message to Ruth
 
@@ -10,18 +17,18 @@ A modern, responsive birthday invitation web application built using **Next.js**
 
 ## ✨ Features
 
-- Displays birthday invitation title, date, and location
-- Visitors can leave comments and well wishes
-- Responsive design for all devices
-- MongoDB-powered data storage
-- Easy-to-deploy and customize
+- 🎊 Displays birthday invitation title, date, and location
+- 💬 Visitors can leave comments and well wishes
+- 📱 Fully responsive design for all devices
+- 🗃️ MongoDB-powered data storage
+- 🧩 Easy to deploy and customize
 
 ## 🛠 Tech Stack
 
 - **Next.js v15.3** – Modern React framework with SSR support
 - **MongoDB** – NoSQL database for storing invitation and comments
 - **Mongoose** – ODM for managing MongoDB data in Node.js
-- **CSS Modules or Tailwind CSS** – For component-level styling
+- **Tailwind CSS** – For fast, responsive component styling
 
 ## 🚀 Getting Started
 
