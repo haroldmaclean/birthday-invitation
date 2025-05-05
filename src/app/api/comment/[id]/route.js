@@ -1,5 +1,5 @@
 import { connectToMongoose } from '@/lib/mongoose';
-import Comment from '@/models/comment';
+import comment from '@/models/comment';
 import { NextResponse } from 'next/server';
 
 export async function DELETE(req, { params }) {

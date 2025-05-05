@@ -1,4 +1,3 @@
-// app/api/comment/route.js
 import { withCORS } from '@/lib/cors';
 import { connectToMongoose } from '@/lib/mongoose';
 import comment from '@/models/comment';
@@ -26,7 +25,7 @@ async function handler(req) {
         );
       }
 
-      const newComment = await Comment.create({
+      const newComment = await comment.create({
         text,
         author: 'Anonymous',
       });
@@ -40,7 +39,7 @@ async function handler(req) {
 
   if (req.method === 'GET') {
     try {
-      const comments = await Comment.find().sort({ createdAt: -1 });
+      const comments = await comment.find().sort({ createdAt: -1 });
       return NextResponse.json(comments);
     } catch (err) {
       return NextResponse.json(
