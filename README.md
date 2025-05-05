@@ -1,5 +1,3 @@
-cat > README.md << 'EOF'
-
 # 🎉 Birthday Invitation Web App
 
 A modern, responsive birthday invitation web application built using **Next.js**, **MongoDB**, and **Mongoose**. Designed to display event details and collect heartfelt wishes from guests. Created with joy to celebrate Ruth’s special day! 🥳
@@ -25,7 +23,7 @@ Check out the live version of the app here:
 
 ## 🛠 Tech Stack
 
-- **Next.js v15.3** – Modern React framework with SSR support
+- **Next.js v15.2.4** – Modern React framework with SSR and static export support
 - **MongoDB** – NoSQL database for storing invitation and comments
 - **Mongoose** – ODM for managing MongoDB data in Node.js
 - **Tailwind CSS** – For fast, responsive component styling
