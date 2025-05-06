@@ -13,6 +13,26 @@ export default function HomePage() {
       <p className="mb-2">Click to like this invitation:</p>
       <LikeButton />
 
+      {/* New Buttons */}
+      <div className="mt-6 space-x-4">
+        <a
+          href="https://birthday-invitation-sigma.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          🌐 View Live Site
+        </a>
+        <a
+          href="https://github.com/haroldmaclean/birthday-invitation/edit/main/src/app/page.js"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+        >
+          ✏️ Edit Page
+        </a>
+      </div>
+
       <hr className="my-8" />
 
       <CommentsList />
