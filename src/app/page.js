@@ -28,6 +28,7 @@ export default function HomePage() {
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+          title="Only editable if you have GitHub access"
         >
           ✏️ Edit Page
         </a>
