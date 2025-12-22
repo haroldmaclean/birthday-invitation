@@ -9,7 +9,16 @@ export default function CommentsList() {
   const [loading, setLoading] = useState(true);
   const [showComments, setShowComments] = useState(true);
   const [sortOrder, setSortOrder] = useState('desc');
-  const [deletingId, setDeletingId] = useState(null); // New
+
+  // States for Deleting
+  const [deletingId, setDeletingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null); // Custom Confirm State
+
+  // States for Editing
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState('');
+  const [updating, setUpdating] = useState(false);
+
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -19,8 +28,7 @@ export default function CommentsList() {
   const fetchComments = async () => {
     try {
       const res = await axios.get('/api/comment');
-      const fetchedComments = res.data;
-      setComments(Array.isArray(fetchedComments) ? fetchedComments : []);
+      setComments(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error('Error fetching comments:', error);
     } finally {
@@ -28,33 +36,41 @@ export default function CommentsList() {
     }
   };
 
-  const toggleCommentsVisibility = () => {
-    setShowComments((prev) => !prev);
+  const handleDelete = async (id) => {
+    try {
+      setDeletingId(id);
+      await axios.delete(`/api/comment/${id}`);
+      setComments((prev) => prev.filter((c) => c._id !== id));
+      setConfirmDeleteId(null);
+    } catch (error) {
+      alert('Failed to delete');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
-  const toggleSortOrder = () => {
-    setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'));
+  const handleUpdate = async (id) => {
+    if (!editText.trim()) return;
+    setUpdating(true);
+    try {
+      const res = await axios.patch(`/api/comment/${id}`, { text: editText });
+      setComments((prev) =>
+        prev.map((c) => (c._id === id ? { ...c, text: res.data.text } : c))
+      );
+      setEditingId(null);
+    } catch (error) {
+      alert('Failed to update');
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const handleCommentAdded = (newComment) => {
     setComments((prev) => [...prev, newComment]);
-    setTimeout(() => {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  };
-
-  const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
-
-    try {
-      setDeletingId(id);
-      await axios.delete(`/api/comment/${id}`);
-      setComments((prev) => prev.filter((comment) => comment._id !== id));
-    } catch (error) {
-      console.error('Error deleting comment:', error);
-    } finally {
-      setDeletingId(null);
-    }
+    setTimeout(
+      () => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }),
+      100
+    );
   };
 
   const sortedComments = [...comments].sort((a, b) =>
@@ -63,61 +79,123 @@ export default function CommentsList() {
       : new Date(a.createdAt) - new Date(b.createdAt)
   );
 
-  if (loading) return <p>Loading comments...</p>;
+  if (loading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto space-y-6">
       <CommentForm onCommentAdded={handleCommentAdded} />
 
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center border-b pb-4">
         <button
-          onClick={toggleCommentsVisibility}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          onClick={() => setShowComments(!showComments)}
+          className="text-blue-600 font-bold hover:underline"
         >
-          {showComments ? 'Hide Comments' : 'View Comments'}
+          {showComments
+            ? 'Hide Comments'
+            : `View Comments (${comments.length})`}
         </button>
-
         <button
-          onClick={toggleSortOrder}
-          className="px-4 py-2 bg-gray-200 text-black rounded"
+          onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+          className="bg-gray-200 px-4 py-2 rounded-md font-semibold"
         >
-          Sort: {sortOrder === 'desc' ? 'Newest First' : 'Oldest First'}
+          Sort: {sortOrder === 'desc' ? 'Newest' : 'Oldest'}
         </button>
       </div>
 
       {showComments && (
-        <ul>
-          {sortedComments.length > 0 ? (
-            sortedComments.map((comment) => (
-              <li
-                key={comment._id}
-                className="mb-4 p-4 border border-gray-300 rounded flex items-start gap-4 justify-between"
-              >
-                <div className="flex gap-4">
-                  <img
-                    src={`https://i.pravatar.cc/40?u=${comment._id}`}
-                    alt="avatar"
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <div>
-                    <p>{comment.text}</p>
-                    <small className="text-gray-500 text-sm">
-                      {new Date(comment.createdAt).toLocaleString()}
-                    </small>
-                  </div>
+        <ul className="space-y-4">
+          {sortedComments.map((comment) => (
+            <li
+              key={comment._id}
+              className="p-5 bg-white border border-gray-300 rounded-lg flex items-center justify-between gap-6 shadow-sm"
+            >
+              <div className="flex items-start gap-4 flex-1">
+                <img
+                  src={`https://i.pravatar.cc/50?u=${comment._id}`}
+                  alt="avatar"
+                  className="w-12 h-12 rounded-full border shadow-sm"
+                />
+
+                <div className="flex-1">
+                  {editingId === comment._id ? (
+                    <div className="space-y-2">
+                      <textarea
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        className="w-full p-2 border-2 border-blue-400 rounded-md outline-none"
+                        rows="2"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleUpdate(comment._id)}
+                          className="bg-green-600 text-white px-4 py-1 rounded font-bold"
+                        >
+                          {updating ? '...' : 'Save'}
+                        </button>
+                        <button
+                          onClick={() => setEditingId(null)}
+                          className="bg-gray-400 text-white px-4 py-1 rounded font-bold"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-gray-800 text-lg mb-1">
+                        {comment.text}
+                      </p>
+                      <small className="text-gray-500">
+                        {new Date(comment.createdAt).toLocaleString()}
+                      </small>
+                    </>
+                  )}
                 </div>
-                <button
-                  onClick={() => handleDelete(comment._id)}
-                  disabled={deletingId === comment._id}
-                  className="text-red-500 hover:text-red-700 text-sm"
-                >
-                  {deletingId === comment._id ? 'Deleting...' : 'Delete'}
-                </button>
-              </li>
-            ))
-          ) : (
-            <p className="text-gray-500">No comments yet.</p>
-          )}
+              </div>
+
+              {/* ACTION BUTTONS ON THE RIGHT */}
+              <div className="flex items-center gap-6 min-w-35 justify-end">
+                {editingId !== comment._id && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setEditingId(comment._id);
+                        setEditText(comment.text);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 font-bold text-lg"
+                    >
+                      Edit
+                    </button>
+
+                    {confirmDeleteId === comment._id ? (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleDelete(comment._id)}
+                          className="bg-red-600 text-white px-3 py-1 rounded font-bold text-sm"
+                        >
+                          Sure?
+                        </button>
+                        <button
+                          onClick={() => setConfirmDeleteId(null)}
+                          className="text-gray-500 font-bold text-sm"
+                        >
+                          No
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDeleteId(comment._id)}
+                        disabled={deletingId === comment._id}
+                        className="text-red-600 hover:text-red-800 font-bold text-lg"
+                      >
+                        {deletingId === comment._id ? '...' : 'Delete'}
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </li>
+          ))}
           <div ref={bottomRef} />
         </ul>
       )}

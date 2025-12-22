@@ -1,3 +1,5 @@
+'use client';
+
 import CommentsList from '@/components/CommentsList';
 import LikeButton from '@/components/LikeButton';
 
@@ -7,13 +9,11 @@ export default function HomePage() {
       <h1 className="text-3xl font-bold mb-4">
         🎉 Happy 5th Birthday, Ruth! 🎂
       </h1>
-      {/* Your banner and image gallery remain here... */}
 
       <h2 className="text-xl font-semibold mb-2">🎈 You're Invited!</h2>
       <p className="mb-2">Click to like this invitation:</p>
       <LikeButton />
 
-      {/* New Buttons */}
       <div className="mt-6 space-x-4">
         <a
           href="https://birthday-invitation-sigma.vercel.app"
