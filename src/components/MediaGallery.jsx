@@ -2,38 +2,30 @@
 
 export default function MediaGallery() {
   /**
-   * Make sure your .env.local contains:
+   * Make sure your .env.local (and Vercel env vars) contain:
    * NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=ddfgssu78
    */
-
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
   /**
-   * IMPORTANT RULE (Cloudinary):
-   * - Do NOT include version (v123...)
-   * - Do NOT include file extension (.mp4)
-   *
-   * Original file:
-   * ruth-video.mp4_tcf4wh.mp4
-   *
-   * Correct public_id:
+   * Cloudinary public ID (do NOT include version or .mp4)
+   * Original file: ruth-video.mp4_tcf4wh.mp4
    */
   const videoPublicId = 'ruth-video.mp4_tcf4wh';
 
   /**
-   * Cloudinary Video Transformations:
+   * Cloudinary Video URL
    * - f_auto: automatic format
    * - q_auto: automatic quality
-   * - c_crop,g_center,y_60: crops top 60px to remove CapCut watermark
-   *   but preserves most of video
-   * - w_720,h_auto: width 720px, height auto (keeps original aspect ratio)
+   * - c_crop,g_center,y_30: crop top 30px to remove CapCut watermark
+   * - w_720,h_auto: width 720px, height auto to preserve full length
    */
-  const videoUrl = `https://res.cloudinary.com/${cloudName}/video/upload/c_crop,g_center,y_60,w_720,h_auto,f_auto,q_auto/${videoPublicId}.mp4`;
+  const videoUrl = `https://res.cloudinary.com/${cloudName}/video/upload/c_crop,g_center,y_30,w_720,h_auto,f_auto,q_auto/${videoPublicId}.mp4`;
 
   return (
     <div className="w-full max-w-md mx-auto my-8">
       {/* VIDEO CONTAINER */}
-      <div className="relative w-full aspect-9/16 rounded-xl overflow-hidden shadow-lg">
+      <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden shadow-lg">
         <video
           controls
           preload="metadata"
