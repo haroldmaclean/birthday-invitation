@@ -13,7 +13,7 @@ export default function MediaGallery() {
    * - Do NOT include version (v123...)
    * - Do NOT include file extension (.mp4)
    *
-   * Original:
+   * Original file:
    * ruth-video.mp4_tcf4wh.mp4
    *
    * Correct public_id:
@@ -22,21 +22,18 @@ export default function MediaGallery() {
 
   /**
    * Cloudinary Video Transformations:
-   *
-   * c_fill   → fills container
-   * w_720    → good quality width
-   * h_1280   → portrait (9:16)
-   * g_center → focus on center
-   * y_80     → crops TOP (removes CapCut text)
-   * f_auto   → best format
-   * q_auto   → best quality/performance
+   * - f_auto: automatic format
+   * - q_auto: automatic quality
+   * - c_crop,g_center,y_60: crops top 60px to remove CapCut watermark
+   *   but preserves most of video
+   * - w_720,h_auto: width 720px, height auto (keeps original aspect ratio)
    */
-  const videoUrl = `https://res.cloudinary.com/${cloudName}/video/upload/c_fill,w_720,h_1280,g_center,y_80,f_auto,q_auto/${videoPublicId}.mp4`;
+  const videoUrl = `https://res.cloudinary.com/${cloudName}/video/upload/c_crop,g_center,y_60,w_720,h_auto,f_auto,q_auto/${videoPublicId}.mp4`;
 
   return (
     <div className="w-full max-w-md mx-auto my-8">
       {/* VIDEO CONTAINER */}
-      <div className="relative w-full aspect-9/16 bg-black rounded-xl overflow-hidden shadow-lg">
+      <div className="relative w-full aspect-9/16 rounded-xl overflow-hidden shadow-lg">
         <video
           controls
           preload="metadata"
