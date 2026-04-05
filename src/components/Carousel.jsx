@@ -10,7 +10,6 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 export default function Carousel() {
   const images = [
     '/assets/ruth-1.jpg',
-    '/assets/ruth-2.jpg',
     '/assets/ruth-friends-1.jpg',
     '/assets/ruth-friends-2.jpg',
     '/assets/ruth-mom.jpg',
