@@ -3,55 +3,123 @@ import { connectToMongoose } from '@/lib/mongoose';
 import comment from '@/models/comment';
 import { NextResponse } from 'next/server';
 
-async function handler(req) {
+// 🔥 CREATE COMMENT (POST)
+async function createComment(req) {
   await connectToMongoose();
 
-  if (req.method === 'POST') {
-    try {
-      const body = await req.json();
-      const { text } = body;
+  try {
+    const body = await req.json();
 
-      if (!text || text.trim() === '') {
-        return NextResponse.json(
-          { message: 'Comment cannot be empty' },
-          { status: 400 }
-        );
-      }
+    // 1. EXTRACT 'author' from the body so it isn't lost
+    const { text, author, avatar, image } = body;
 
-      if (text.length > 300) {
-        return NextResponse.json(
-          { message: 'Comment is too long (max 300 characters)' },
-          { status: 400 }
-        );
-      }
-
-      const newComment = await comment.create({
-        text,
-        author: 'Anonymous',
-      });
-
-      return NextResponse.json({ newComment }, { status: 201 });
-    } catch (err) {
-      console.error('Error posting comment:', err);
-      return NextResponse.json({ message: 'Server error' }, { status: 500 });
-    }
-  }
-
-  if (req.method === 'GET') {
-    try {
-      const comments = await comment.find().sort({ createdAt: -1 });
-      return NextResponse.json(comments);
-    } catch (err) {
+    // ✅ Validation
+    if (!text || text.trim() === '') {
       return NextResponse.json(
-        { message: 'Failed to fetch comments' },
-        { status: 500 }
+        { message: 'Comment cannot be empty' },
+        { status: 400 },
       );
     }
-  }
 
-  return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
+    if (text.length > 300) {
+      return NextResponse.json(
+        { message: 'Comment is too long (max 300 characters)' },
+        { status: 400 },
+      );
+    }
+
+    // ✅ Save EVERYTHING - including the actual author name
+    const newComment = await comment.create({
+      text,
+      // 2. Use the author from the form, default to 'Anonymous' if missing
+      author: author || 'Anonymous',
+      avatar: avatar || '',
+      image: image || '',
+    });
+
+    return NextResponse.json({ newComment }, { status: 201 });
+  } catch (err) {
+    console.error('POST ERROR:', err);
+    return NextResponse.json({ message: 'Server error' }, { status: 500 });
+  }
 }
 
-export const GET = withCORS(handler);
-export const POST = withCORS(handler);
+// 🔥 GET COMMENTS
+async function getComments() {
+  await connectToMongoose();
+
+  try {
+    const comments = await comment.find().sort({ createdAt: -1 });
+
+    return NextResponse.json(comments, { status: 200 });
+  } catch (err) {
+    console.error('GET ERROR:', err);
+    return NextResponse.json(
+      { message: 'Failed to fetch comments' },
+      { status: 500 },
+    );
+  }
+}
+
+// ✅ EXPORTS (IMPORTANT)
+export const POST = withCORS(createComment);
+export const GET = withCORS(getComments);
 export const OPTIONS = withCORS(() => new Response(null, { status: 204 }));
+
+// import { withCORS } from '@/lib/cors';
+// import { connectToMongoose } from '@/lib/mongoose';
+// import comment from '@/models/comment';
+// import { NextResponse } from 'next/server';
+
+// async function handler(req) {
+//   await connectToMongoose();
+
+//   if (req.method === 'POST') {
+//     try {
+//       const body = await req.json();
+//       const { text } = body;
+
+//       if (!text || text.trim() === '') {
+//         return NextResponse.json(
+//           { message: 'Comment cannot be empty' },
+//           { status: 400 }
+//         );
+//       }
+
+//       if (text.length > 300) {
+//         return NextResponse.json(
+//           { message: 'Comment is too long (max 300 characters)' },
+//           { status: 400 }
+//         );
+//       }
+
+//       const newComment = await comment.create({
+//         text,
+//         author: 'Anonymous',
+//       });
+
+//       return NextResponse.json({ newComment }, { status: 201 });
+//     } catch (err) {
+//       console.error('Error posting comment:', err);
+//       return NextResponse.json({ message: 'Server error' }, { status: 500 });
+//     }
+//   }
+
+//   if (req.method === 'GET') {
+//     try {
+//       const comments = await comment.find().sort({ createdAt: -1 });
+//       return NextResponse.json(comments);
+//     } catch (err) {
+//       return NextResponse.json(
+//         { message: 'Failed to fetch comments' },
+//         { status: 500 }
+//       );
+//     }
+//   }
+
+//   return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
+// }
+
+// export const GET = withCORS(handler);
+// export const POST = withCORS(handler);
+// export const OPTIONS = withCORS(() => new Response(null, { status: 204 }));
