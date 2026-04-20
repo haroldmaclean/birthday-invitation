@@ -12,7 +12,13 @@ const commentSchema = new mongoose.Schema({
     default: 'Anonymous',
   },
 
-  // ✅ NEW: user avatar (profile image)
+  // 🔒 SECURITY: Stores the Google Email to restrict Edit/Delete access
+  authorEmail: {
+    type: String,
+    required: true, // Required so we always know who owns the comment
+  },
+
+  // ✅ NEW: user avatar (profile image from Google)
   avatar: {
     type: String,
     default: '',
@@ -47,6 +53,19 @@ export default comment;
 //     type: String,
 //     default: 'Anonymous',
 //   },
+
+//   // ✅ NEW: user avatar (profile image)
+//   avatar: {
+//     type: String,
+//     default: '',
+//   },
+
+//   // ✅ NEW: optional image inside comment
+//   image: {
+//     type: String,
+//     default: '',
+//   },
+
 //   createdAt: {
 //     type: Date,
 //     default: Date.now,

@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
+import AuthProvider from '@/components/AuthProvider'; // Import the wrapper
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,7 +12,28 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {/* Wrapping children allows all pages to access the session */}
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
+
+// import { Inter } from 'next/font/google';
+// import './globals.css';
+
+// const inter = Inter({ subsets: ['latin'] });
+
+// export const metadata = {
+//   title: "Ruth's 5th Birthday",
+//   description: 'Birthday Invitation',
+// };
+
+// export default function RootLayout({ children }) {
+//   return (
+//     <html lang="en">
+//       <body className={inter.className}>{children}</body>
+//     </html>
+//   );
+// }
