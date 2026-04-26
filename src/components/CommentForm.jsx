@@ -109,7 +109,9 @@ export default function CommentForm({ onCommentAdded }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <div className="flex flex-col">
-          <span className="font-semibold text-gray-600 mb-1">Your Photo:</span>
+          <span className="font-semibold text-gray-600 mb-1">
+            Your Photo 📸:
+          </span>
           <input
             type="file"
             accept="image/*"
@@ -119,7 +121,7 @@ export default function CommentForm({ onCommentAdded }) {
         </div>
         <div className="flex flex-col">
           <span className="font-semibold text-gray-600 mb-1">
-            Attach Best Wishes:
+            Add a Birthday Photo 📸:
           </span>
           <input
             type="file"
