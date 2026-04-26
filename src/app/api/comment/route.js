@@ -10,8 +10,8 @@ async function createComment(req) {
   try {
     const body = await req.json();
 
-    // 1. EXTRACT 'author' from the body so it isn't lost
-    const { text, author, avatar, image } = body;
+    // 1. EXTRACT 'authorEmail'—this was missing!
+    const { text, author, authorEmail, avatar, image } = body;
 
     // ✅ Validation
     if (!text || text.trim() === '') {
@@ -21,18 +21,11 @@ async function createComment(req) {
       );
     }
 
-    if (text.length > 300) {
-      return NextResponse.json(
-        { message: 'Comment is too long (max 300 characters)' },
-        { status: 400 },
-      );
-    }
-
-    // ✅ Save EVERYTHING - including the actual author name
+    // ✅ Save EVERYTHING including the email for ownership checks
     const newComment = await comment.create({
       text,
-      // 2. Use the author from the form, default to 'Anonymous' if missing
       author: author || 'Anonymous',
+      authorEmail: authorEmail || 'guest@birthday.com', // Matches Form fallback
       avatar: avatar || '',
       image: image || '',
     });
@@ -47,10 +40,8 @@ async function createComment(req) {
 // 🔥 GET COMMENTS
 async function getComments() {
   await connectToMongoose();
-
   try {
     const comments = await comment.find().sort({ createdAt: -1 });
-
     return NextResponse.json(comments, { status: 200 });
   } catch (err) {
     console.error('GET ERROR:', err);
@@ -61,7 +52,6 @@ async function getComments() {
   }
 }
 
-// ✅ EXPORTS (IMPORTANT)
 export const POST = withCORS(createComment);
 export const GET = withCORS(getComments);
 export const OPTIONS = withCORS(() => new Response(null, { status: 204 }));
