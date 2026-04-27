@@ -9,7 +9,7 @@ export const metadata = {
   description:
     "Join us in celebrating Ruth's big day! Click to view photos and leave a birthday wish.",
   openGraph: {
-    title: "Ruth's 6th Birthday | Sive & Fabulous",
+    title: "Ruth's 6th Birthday | six & Fabulous",
     description:
       "You're invited! Share your favorite memories and birthday wishes for Ruth.",
     url: 'https://birthday-invitation-sigma.vercel.app',
