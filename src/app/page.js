@@ -9,63 +9,65 @@ import LoginButton from '@/components/LoginButton';
 
 export default function HomePage() {
   return (
-    /* Added overflow-x-hidden to prevent layout breaking on legacy mobile browsers */
-    <div className="bg-gradient-to-b from-pink-50 to-gray-100 min-h-screen py-6 md:py-12 px-2 sm:px-4 overflow-x-hidden">
+    /* Fix: Reduced py-6 to py-2 for small mobiles to save vertical space */
+    <div className="bg-gradient-to-b from-pink-50 to-gray-100 min-h-screen py-2 md:py-12 px-2 sm:px-4 overflow-x-hidden">
       {/* 🔐 AUTH SECTION */}
-      <div className="max-w-2xl mx-auto flex justify-end mb-6">
+      <div className="max-w-2xl mx-auto flex justify-end mb-3">
         <LoginButton />
       </div>
 
       {/* 🎬 Featured Media Carousel */}
-      <div className="max-w-2xl mx-auto mb-6 shadow-2xl rounded-2xl overflow-hidden">
+      <div className="max-w-2xl mx-auto mb-4 shadow-xl rounded-xl overflow-hidden">
         <Carousel />
       </div>
 
-      {/* The Main Invitation Card - Added w-full and responsive rounded corners */}
-      <main className="w-full max-w-2xl mx-auto bg-white shadow-xl rounded-2xl md:rounded-3xl overflow-hidden border border-white mt-4">
+      {/* The Main Invitation Card */}
+      <main className="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-xl md:rounded-3xl overflow-hidden border border-white">
         {/* 1. Profile/Header */}
-        <div className="px-4 sm:px-6 pt-6">
+        <div className="px-3 sm:px-6 pt-4">
           <PostHeader />
         </div>
 
-        {/* 2. Celebration Text - Adjusted padding for small screens */}
+        {/* 2. Celebration Text - Scaled down for legacy mobile */}
         <div className="px-4 sm:px-8 pb-6 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-3 tracking-tight">
+          {/* text-2xl for small phones, text-4xl for modern/desktop */}
+          <h1 className="text-2xl sm:text-4xl font-black text-gray-900 mb-2 tracking-tight">
             🎉 Happy 6th Birthday, <span className="text-pink-600">Ruth!</span>{' '}
             🎂
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-600 leading-relaxed mb-6">
+          {/* text-base for small phones, text-xl for modern/desktop */}
+          <p className="text-base sm:text-xl text-gray-600 leading-snug sm:leading-relaxed mb-4">
             🎈 You're Invited! Join us in celebrating{' '}
-            <span className="font-bold">six wonderful years</span> of joy,
-            laughter, and being{' '}
-            <span className="italic font-semibold text-pink-500">fabulous</span>
-            .
+            <span className="font-bold text-pink-500">six wonderful years</span>{' '}
+            of joy, laughter, and being fabulous.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 border-y border-gray-50 py-4">
+          {/* Reduced gap for smaller screens */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 border-y border-gray-50 py-3">
             <LikeButton />
-            <div className="flex items-center gap-2 bg-pink-50 border border-pink-100 px-4 py-2 rounded-full animate-pulse">
-              <span className="text-lg">✨</span>
-              <p className="text-[11px] sm:text-sm font-bold text-pink-600 italic">
+            <div className="flex items-center gap-2 bg-pink-50 border border-pink-100 px-3 py-1.5 rounded-full animate-pulse">
+              <span className="text-sm">✨</span>
+              {/* text-[10px] is the secret for old small screens */}
+              <p className="text-[10px] sm:text-sm font-bold text-pink-600 italic">
                 Tap the heart to send Ruth some love!
               </p>
             </div>
           </div>
         </div>
 
-        {/* 3. Media Gallery (Video/Photos) */}
+        {/* 3. Media Gallery */}
         <div className="bg-gray-50">
           <MediaGallery />
         </div>
 
         {/* 4. Guestbook Section */}
-        <div className="px-4 sm:px-6 py-8 bg-white">
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-800">
+        <div className="px-3 sm:px-6 py-6 bg-white">
+          <div className="mb-4 text-center">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
               Leave a Wish ✍️
             </h2>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 text-[11px] sm:text-sm">
               Share a memory or a sweet message for the birthday girl
             </p>
           </div>
@@ -74,15 +76,101 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-12">
-        <p className="text-gray-400 text-sm font-medium tracking-widest uppercase">
+      <footer className="text-center py-8">
+        <p className="text-gray-400 text-[10px] sm:text-sm font-medium tracking-widest uppercase">
           Made with ❤️ for Ruth's 6th Birthday
         </p>
-        <p className="text-gray-300 text-xs mt-2">© 2026 • Six & Fabulous</p>
+        <p className="text-gray-300 text-[9px] mt-2">© 2026 • Six & Fabulous</p>
       </footer>
     </div>
   );
 }
+
+// 'use client';
+
+// import PostHeader from '@/components/PostHeader';
+// import MediaGallery from '@/components/MediaGallery';
+// import CommentsList from '@/components/CommentsList';
+// import LikeButton from '@/components/LikeButton';
+// import Carousel from '@/components/Carousel';
+// import LoginButton from '@/components/LoginButton';
+
+// export default function HomePage() {
+//   return (
+//     /* Added overflow-x-hidden to prevent layout breaking on legacy mobile browsers */
+//     <div className="bg-gradient-to-b from-pink-50 to-gray-100 min-h-screen py-6 md:py-12 px-2 sm:px-4 overflow-x-hidden">
+//       {/* 🔐 AUTH SECTION */}
+//       <div className="max-w-2xl mx-auto flex justify-end mb-6">
+//         <LoginButton />
+//       </div>
+
+//       {/* 🎬 Featured Media Carousel */}
+//       <div className="max-w-2xl mx-auto mb-6 shadow-2xl rounded-2xl overflow-hidden">
+//         <Carousel />
+//       </div>
+
+//       {/* The Main Invitation Card - Added w-full and responsive rounded corners */}
+//       <main className="w-full max-w-2xl mx-auto bg-white shadow-xl rounded-2xl md:rounded-3xl overflow-hidden border border-white mt-4">
+//         {/* 1. Profile/Header */}
+//         <div className="px-4 sm:px-6 pt-6">
+//           <PostHeader />
+//         </div>
+
+//         {/* 2. Celebration Text - Adjusted padding for small screens */}
+//         <div className="px-4 sm:px-8 pb-6 text-center md:text-left">
+//           <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-3 tracking-tight">
+//             🎉 Happy 6th Birthday, <span className="text-pink-600">Ruth!</span>{' '}
+//             🎂
+//           </h1>
+
+//           <p className="text-lg sm:text-xl text-gray-600 leading-relaxed mb-6">
+//             🎈 You're Invited! Join us in celebrating{' '}
+//             <span className="font-bold">six wonderful years</span> of joy,
+//             laughter, and being{' '}
+//             <span className="italic font-semibold text-pink-500">fabulous</span>
+//             .
+//           </p>
+
+//           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 border-y border-gray-50 py-4">
+//             <LikeButton />
+//             <div className="flex items-center gap-2 bg-pink-50 border border-pink-100 px-4 py-2 rounded-full animate-pulse">
+//               <span className="text-lg">✨</span>
+//               <p className="text-[11px] sm:text-sm font-bold text-pink-600 italic">
+//                 Tap the heart to send Ruth some love!
+//               </p>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* 3. Media Gallery (Video/Photos) */}
+//         <div className="bg-gray-50">
+//           <MediaGallery />
+//         </div>
+
+//         {/* 4. Guestbook Section */}
+//         <div className="px-4 sm:px-6 py-8 bg-white">
+//           <div className="mb-8 text-center">
+//             <h2 className="text-2xl font-bold text-gray-800">
+//               Leave a Wish ✍️
+//             </h2>
+//             <p className="text-gray-500 text-sm">
+//               Share a memory or a sweet message for the birthday girl
+//             </p>
+//           </div>
+//           <CommentsList />
+//         </div>
+//       </main>
+
+//       {/* Footer */}
+//       <footer className="text-center py-12">
+//         <p className="text-gray-400 text-sm font-medium tracking-widest uppercase">
+//           Made with ❤️ for Ruth's 6th Birthday
+//         </p>
+//         <p className="text-gray-300 text-xs mt-2">© 2026 • Six & Fabulous</p>
+//       </footer>
+//     </div>
+//   );
+// }
 
 // 'use client';
 
