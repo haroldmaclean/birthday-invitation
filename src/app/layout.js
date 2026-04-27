@@ -5,7 +5,7 @@ import AuthProvider from '@/components/AuthProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: "Ruth's 6th Birthday | Five & Fabulous",
+  title: "Ruth's 6th Birthday | Six & Fabulous",
   description:
     "Join us in celebrating Ruth's big day! Click to view photos and leave a birthday wish.",
   openGraph: {
